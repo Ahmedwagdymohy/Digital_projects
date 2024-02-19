@@ -1,6 +1,7 @@
 module BLOCK_MUX_DFF #(parameter N = 1) (
-    input [N-1:0]D , CLK, reset,
-    output reg [N-1:0]Q
+    input [N-1:0]D ,
+    input CLK, reset,
+    output [N-1:0]Q
 );
 wire sel;
 reg Q1;
