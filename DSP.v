@@ -10,7 +10,7 @@ module DSP (
 	output CARRYOUT,CARRYOUTF
 	);
  /**Output of each BLOCK */  
- 
+ //wires should be busses????????????
 wire D_reg_output; 
 wire B0_reg_output; 
 wire A0_reg_output; 
@@ -18,7 +18,9 @@ wire C_reg_output;
 wire B1_reg_output; 
 wire A1_reg_output; 
 wire M_reg_output;
-    
+wire MUX_X_output;
+wire POST_ADDER_output;
+
 
 
 /*module BLOCK_MUX_DFF #(parameter N = 1) (input [N-1:0]D , CLK, reset,output reg [N-1:0]Q); */
@@ -79,6 +81,11 @@ end
 BLOCK_MUX_DFF #(.N(18)) B1_REG_18 (w1 , CEB , RSTB ,B1_reg_output );
 /******** <  END B1 Reg ********/
 
+assign BCOUT =  B1_reg_output;
+
+//concatenation of A:B
+
+wire D_A_B = {A,B,D[11:0]};
 
 /******** <  A1 Reg ********/  // the B1 takes the same clk & reset as B0
 BLOCK_MUX_DFF #(.N(18)) A1_REG_18 (A0_reg_output , CEA , RSTA ,A1_reg_output );
@@ -117,6 +124,8 @@ assign temp = M;
 
 
 
+/*****creating the MUX of opmode[1:0]******/
+assign MUX_X_output = OPMODE[1] ? (OPMODE[0] ? D_A_B : POST_ADDER_output) : (OPMODE[0] ? M_reg_output : 'b0);
 
 
 
