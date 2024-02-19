@@ -1,4 +1,4 @@
-#General Notes:
+# General Notes:
 1. The 18-bit A, B, and D buses are concatenated in the following order: D[11:0], A[17:0], 
 B[17:0].
 2. The X and Z multiplexers are 48-bit designs. Selecting any of the 36-bit inputs provides 
@@ -19,5 +19,6 @@ logic, whereas CARRYOUT is the dedicated route to the adjacent DSP48A1 slice.
 9. The registered output of the multiplier or its direct output can be routed to the FPGA 
 logic through a 36-bit vector called M.
 10. The BCIN input is the direct cascade from the adjacent DSP48A1 BCOUT.
+    
 ![image](https://github.com/Ahmedwagdymohy/Spartan6-DSP48A1-Project/assets/62253674/98a4eb89-b6be-4114-8e36-c05d24f971ee)
 ![image](https://github.com/Ahmedwagdymohy/Spartan6-DSP48A1-Project/assets/62253674/ddb086aa-4b2a-45ff-a538-6e5a0fae73f7)
