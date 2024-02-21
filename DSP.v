@@ -18,8 +18,11 @@ wire C_reg_output;
 wire B1_reg_output; 
 wire A1_reg_output; 
 wire M_reg_output;
+wire P_reg_output;
 wire MUX_X_output;
+wire MUX_Z_output;
 wire POST_ADDER_output;
+wire CIN_wire
 
 
 
@@ -124,8 +127,59 @@ assign temp = M;
 
 
 
-/*****creating the MUX of opmode[1:0]******/
+/*****creating the MUX X of opmode[1:0]******/
 assign MUX_X_output = OPMODE[1] ? (OPMODE[0] ? D_A_B : POST_ADDER_output) : (OPMODE[0] ? M_reg_output : 'b0);
+
+
+
+
+/*****creating the MUXZ of opmode[3:2]******/
+assign MUX_Z_output = OPMODE[3] ? (OPMODE[2] ? C_reg_output : P_reg_output) : (OPMODE[2] ? PCIN : 'b0);
+
+
+
+
+reg [47:0]w3;
+
+/*****************************Creating the post ADDER opmode[7]*******************************/
+always@(posedge CLK)begin
+	if(OPMODE[7])  //if OPMODE == 1 SUB will work (Z- (x+cin))
+	  		w3<=(MUX_Z_output - (MUX_X_output + CIN_wire));
+		else    //if OPMODE6 == 0 ADD WILL work (z + x)
+			w3<=MUX_Z_output + MUX_X_output;
+end
+/*****************************end of post ADDER opmode[7]*******************************/
+
+
+
+/******** <  P Reg ******************************************************/
+BLOCK_MUX_DFF #(.N(48)) P_REG_48 (w3 , CEP , RSTP ,P_reg_output);
+/******** <  END P Reg ****************************************************/
+assign P_reg_output = PCOUT;
+
+
+/******** <CYI Reg **********************************************************/
+BLOCK_MUX_DFF #(.N(1)) CYI_REG_1 (carry_cascade , CECARRYIN , RSTCARRYIN ,CIN_wire);
+/******** <END CYI Reg *******************************************************/
+
+
+
+
+/*********Carry_cascade MUX**********************************************************/
+reg carry_cascade;
+always@(posedge CLK)begin
+	if( opmode[5]== CARRYIN)
+		carry_cascade <=  CARRYIN;
+	else
+		carry_cascade <= 'b0;
+end
+
+/*********< END_Carry_cascade MUX**********************************************************/
+
+
+
+
+
 
 
 
