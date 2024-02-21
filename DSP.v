@@ -22,7 +22,7 @@ wire P_reg_output;
 wire MUX_X_output;
 wire MUX_Z_output;
 wire POST_ADDER_output;
-wire CIN_wire
+wire CIN_wire;
 
 
 
@@ -123,7 +123,8 @@ reg[35:0]temp;
 always@(posedge CLK)begin
 	temp= M_reg_output;
 end
-assign temp = M;
+
+assign M = temp;
 
 
 
@@ -158,23 +159,28 @@ BLOCK_MUX_DFF #(.N(48)) P_REG_48 (w3 , CEP , RSTP ,P_reg_output);
 assign P_reg_output = PCOUT;
 
 
-/******** <CYI Reg **********************************************************/
-BLOCK_MUX_DFF #(.N(1)) CYI_REG_1 (carry_cascade , CECARRYIN , RSTCARRYIN ,CIN_wire);
-/******** <END CYI Reg *******************************************************/
-
 
 
 
 /*********Carry_cascade MUX**********************************************************/
 reg carry_cascade;
 always@(posedge CLK)begin
-	if( opmode[5]== CARRYIN)
+	if( OPMODE[5]== CARRYIN)
 		carry_cascade <=  CARRYIN;
 	else
 		carry_cascade <= 'b0;
 end
 
 /*********< END_Carry_cascade MUX**********************************************************/
+
+
+
+
+/******** <CYI Reg **********************************************************/
+BLOCK_MUX_DFF #(.N(1)) CYI_REG_1 (carry_cascade , CECARRYIN , RSTCARRYIN ,CIN_wire);
+/******** <END CYI Reg *******************************************************/
+
+
 
 
 
